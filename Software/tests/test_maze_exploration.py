@@ -196,7 +196,7 @@ def run_trials():
     def mock_fire():
         nonlocal fired_count
         fired_count += 1
-        print("    [HARDWARE EVENT] Solenoid impulse triggered successfully!")
+        print("    [HARDWARE EVENT] Cam launcher cycle triggered successfully!")
 
     explorer.startFiring = mock_fire
 
@@ -327,7 +327,7 @@ def run_trials():
         print(f"  - Vectorized Frontier Search: PASSED (0.002s avg)")
         print(f"  - Metric Coordinate Conversion: PASSED")
         print(f"  - Obstacle Blacklist Recovery: PASSED")
-        print(f"  - Thermal Alignment & Solenoid Firing: PASSED ({fired_count}/{len(maze.thermal_targets)} targets)")
+        print(f"  - Thermal Alignment & Launcher Firing: PASSED ({fired_count}/{len(maze.thermal_targets)} targets)")
         return True, error_report
     else:
         print("  STATUS: ISSUES DETECTED")

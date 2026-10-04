@@ -173,7 +173,7 @@ class ExplorerNode(Node):
             except Exception as e:
                 self.get_logger().error(f"GPIO firing error: {e}")
         else:
-            self.get_logger().info("[SIMULATION] Solenoid activated -> Projectile fired!")
+            self.get_logger().info("[SIMULATION] Cam launcher motor pulsed -> Projectile fired!")
 
     def check_heat_source(self):
         """Main decision loop: prioritizing thermal targets over frontier exploration."""

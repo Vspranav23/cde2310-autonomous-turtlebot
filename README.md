@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Tests: 100% Passed](https://img.shields.io/badge/Tests-100%25%20Passed-brightgreen.svg)](Software/tests)
 
-An end-to-end autonomous mobile robotics system built on TurtleBot, featuring autonomous SLAM frontier exploration, real-time infrared thermal target acquisition, and a custom 3D-printed solenoid-actuated projectile mechanism.
+An end-to-end autonomous mobile robotics system built on TurtleBot, featuring autonomous SLAM frontier exploration, real-time infrared thermal target acquisition, and a custom 3D-printed cam-cantilever-spring ping-pong ball launcher.
 
 ---
 
@@ -26,8 +26,8 @@ graph LR
 
     subgraph Actuation["Actuation & Firing"]
         GoalGen --> Motors["TurtleBot Wheels"]
-        LockTarget --> Servo["Servo Safety Gate"]
-        LockTarget --> Solenoid["High-Impulse Solenoid Cannon"]
+        LockTarget --> Driver["L298N Motor Driver (GPIO PWM)"]
+        Driver --> Launcher["Cam-Cantilever-Spring Launcher"]
     end
 ```
 
@@ -35,7 +35,7 @@ graph LR
 
 - **Autonomous Frontier Exploration**: Nav2-integrated frontier exploration node driving complete environment mapping without teleoperation. Uses vectorized NumPy neighbor slicing for millisecond-level frontier discovery.
 - **Thermal Heat-Source Tracking**: Real-time 8x8 thermal array processing identifying temperature differentials to detect victims or simulated heat targets.
-- **Precision Mechanical Launcher**: Custom CAD-modeled spring/solenoid cannon with servo gate trigger for reliable projectile deployment.
+- **Cam-Cantilever-Spring Launcher**: A geared DC motor rotates a custom surface cam that lifts a lever against an extension spring (14 mm stroke). When the lever drops off the cam step, the spring flicks it up to strike the ping-pong ball. Fed from a gravity hopper (8 balls + 1 in the launcher), and fired in 2 s / 4 s intervals.
 - **Distributed ROS 2 Topology**: Workstation host handles heavy SLAM mapping and RViz visualization, while an onboard Raspberry Pi manages motor drivers, thermal I2C bus, and GPIO firing triggers.
 - **Dual-Mode Simulation & Hardware Abstraction**: Seamlessly operates in real hardware mode (Raspberry Pi GPIO + Adafruit AMG8833) and standalone simulation mode (Gazebo / software testbed).
 
@@ -46,13 +46,22 @@ graph LR
 | Mobile Base | TurtleBot3 Burger / Custom Chassis | Dynamixel / UART |
 | Onboard SBC | Raspberry Pi 4 Model B (4GB) | GPIO / I2C |
 | Thermal Sensor | Panasonic / Adafruit AMG8833 | I2C (0x69) |
-| Actuators | 12V Push-Pull Solenoid & SG90 Micro Servo | High-current MOSFET switch + GPIO PWM |
-| 3D Enclosure | PLA+ 3D printed brackets, barrel, & plunger | Custom SolidWorks files in `/cad` |
+| Launcher Actuator | RE-260 DC motor + Ta72004 gearbox | L298N motor driver, GPIO PWM |
+| 3D Printed Parts | Cam, lever, launcher body (PETG), hopper & sensor mount | Custom SolidWorks files in `/cad` |
+
+## Subsystem Documentation
+
+| Subsystem | README | Covers |
+|---|---|---|
+| Mechanical | [cad/README.md](cad/README.md) | Cam-cantilever-spring launcher, hopper, sensor mount, assembly, CAD file map |
+| Electrical | [Electrical/README.md](Electrical/README.md) | PCB hat, wiring and pin map, power budget, BOM, Gerbers |
+| Software | [Software/README.md](Software/README.md) | ROS 2 nodes, topics, thermal codes, launch files, tests |
 
 ## Repository Structure
 
 ```
 ├── cad/                     # 3D printable STL and STEP mechanical files
+├── docs/                    # Figures (simulated map render)
 ├── Electrical/              # Schematics and sensor application datasheets
 ├── Software/
 │   ├── cde2310/             # Main ROS 2 package (nodes, launch, params)
@@ -60,6 +69,7 @@ graph LR
 │   │   ├── config/          # nav2_params.yaml
 │   │   └── cde2310/         # Thermal detection and motion control nodes
 │   ├── workspace/           # Colcon workspace sources
+│   ├── abandoned/           # Dropped prototypes (solenoid launcher)
 │   └── tests/               # Automated maze simulation & unit test trials
 └── LICENSE                  # MIT License
 ```
@@ -104,7 +114,11 @@ The autonomous navigation and target engagement logic was validated against a 12
   - Vectorized Frontier Search: PASSED (0.002s avg)
   - Metric Coordinate Conversion: PASSED
   - Obstacle Blacklist Recovery: PASSED
-  - Thermal Alignment & Solenoid Firing: PASSED (2/2 targets neutralized)
+  - Thermal Alignment & Launcher Firing: PASSED (2/2 targets neutralized)
   - Final Mapping Coverage: 88.0%
 ======================================================================
 ```
+
+![Simulated maze (left) and the occupancy grid built during exploration (right)](docs/sim_map.png)
+
+*Left: ground-truth maze with heat targets (stars) and start pose. Right: map uncovered by the simulated LiDAR (grey = unknown) and the poses where scans were taken. The sim moves the robot directly between frontiers without collision checking, so the line is not a drivable path. Regenerate with `python Software/tests/render_sim_map.py`.*
