@@ -10,6 +10,8 @@ Everything runs on the TurtleBot's battery. The PCB takes its power from the Ope
 
 ## System overview
 
+<img src="../docs/images/electrical_block_diagram.png" width="560">
+
 ```
 3S LiPo (11.1 V, 1800 mAh) ──> OpenCR ──5 V──> PCB hat ──> Raspberry Pi 4 (GPIO header)
                                                   ├──I2C──> AMG8833 thermal camera
@@ -22,6 +24,10 @@ Everything runs on the TurtleBot's battery. The PCB takes its power from the Ope
 | L298N IN1 (PWM, 1 kHz) | GPIO 18 | `startFiring()` in the explorer node, `Software/test_firing.py` |
 | L298N IN2 (held low) | GPIO 27 | same |
 | Set HIGH at startup | GPIO 17 | explorer node (presumably the L298N enable pin) |
+
+<img src="../docs/images/electrical_schematic.png" width="640">
+
+*Wiring schematic for the whole system.*
 
 The L298N was added late in the project (week 12), after the solenoid design was dropped. It isn't on the PCB, so it's wired to the Pi header with jumper wires.
 
@@ -37,14 +43,23 @@ The L298N was added late in the project (week 12), after the solenoid design was
 | L298N | 5–35 V motor supply, 20 W max |
 | PCB hat | 5 V input, max 4 A (limited by the OpenCR's 5 V output), 71 × 56 × 31 mm, 30 g |
 
+Power was measured with the robot running from a bench supply set to 12.3 V, 1.0 A max. Power peaks while the robot boots, then settles to about 6.7 W at idle:
+
+| Run 1 | Run 2 | Run 3 |
+|---|---|---|
+| <img src="../docs/images/power_idle_run1.png" width="260"> | <img src="../docs/images/power_idle_run2.png" width="260"> | <img src="../docs/images/power_idle_run3.png" width="260"> |
+
 ## The onboard Raspberry Pi PCB
 
 The PCB hat was designed with a lot of help from Mr. Eugene to make the wiring tidier and more reliable.
 
 - **Connections:** it passes through the Pi's GPIO and I²C pins. Pin 24 (GPIO 8) is the exception (see Known issues).
-- **MOSFET outputs:** two IRL3803 MOSFETs switch the `5VSOLENOID` and `12VSOLENOID` headers. These were for the solenoid launcher, which was abandoned. The final launcher doesn't use them.
+- **Headers:** the board has headers for the `AMG8833`, a `SERVO`, and the `5VSOLENOID` and `12VSOLENOID` outputs. It also has a 5 V / 12 V screw terminal block.
+- **MOSFET outputs:** two IRL3803 MOSFETs (Q1, Q2) switch the two solenoid outputs. These were for the solenoid launcher, which was abandoned. The final launcher doesn't use them.
 - **Manufacture:** five boards were ordered from JLCPCB, which ran a flying-probe electrical test on them. One was assembled in-house at the E2 Electronics Lab.
 - **Testing:** the assembled board was checked with a 5 V supply and a 3.3 V signal to confirm a Pi GPIO pin can switch the MOSFETs. It was then integrated with a backup Raspberry Pi to confirm AMG8833 data can be read through it.
+
+<img src="../docs/images/pcb_layout.png" width="520">
 
 ### Known issues
 

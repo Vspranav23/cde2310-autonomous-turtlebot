@@ -14,6 +14,10 @@ The software runs on ROS 2 Humble and is split across two machines:
  OpenCR ─────────────────────/odom───────────┘    └──GPIO PWM──> L298N ──> launcher cam motor
 ```
 
+<img src="../docs/images/mission_flow.png" width="620">
+
+*Planned mission flow.*
+
 The explorer node runs its decision loop every 2 s:
 
 1. **Heat seen:** if the latest `/thermal_data` message isn't `N`, it follows the heat source:

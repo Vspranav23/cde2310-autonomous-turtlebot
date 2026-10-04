@@ -8,6 +8,14 @@ The mechanical payload sits on a TurtleBot3 Burger. It has three parts:
 
 All custom parts were modelled in SolidWorks and 3D printed. The launcher parts are PETG.
 
+| Built robot | CAD |
+|---|---|
+| <img src="../docs/images/robot_photo.jpg" width="360"> | <img src="../docs/images/robot_cad.png" width="360"> |
+
+<img src="../docs/images/components_catalogue.png" width="480">
+
+*Components: 1 hopper, 2 launcher, 3 launcher mount, 4–7 spacers 1–4, 8 sensor mount, 9 PCB controller, 10 L298N motor driver, 11 AMG8833 thermal sensor.*
+
 ## Specifications
 
 | Item | Value |
@@ -28,6 +36,18 @@ A lever pivots on a pin in the launcher mount. One end of the lever rests on a c
 3. When the lever reaches the cam's step, it drops off.
 4. The spring snaps the lever back, and the lever strikes the ball upward.
 
+| CAD | Printed launcher (PETG) |
+|---|---|
+| <img src="../docs/images/launcher_cad_labelled.png" width="420"> | <img src="../docs/images/launcher_photo.jpg" width="300"> |
+
+| Spring loaded (lever on the cam) | Fired (lever flicked up into the firing pin) |
+|---|---|
+| <img src="../docs/images/launcher_cocked.png" width="360"> | <img src="../docs/images/launcher_released.png" width="360"> |
+
+<img src="../docs/images/launcher_assembly_plan.png" width="600">
+
+*Launcher assembly order.*
+
 ### Design changes made during testing
 
 | Problem | Change |
@@ -37,6 +57,14 @@ A lever pivots on a pin in the launcher mount. One end of the lever rests on a c
 | The launcher vibrated while the robot was moving. | Added a waffle-pattern support under the base and attached the base plate to the TurtleBot's plate supports. |
 | Friction between the lever and the cam stalled the motor. | Greased all moving parts. |
 | The printed pivot pin couldn't carry the spring load. | Drilled a 2 mm bore through the pin and inserted a steel spring dowel. Added a spacer between the lever and the mount. |
+
+| Cracked mounting holes | Broken cam notch | Redesigned cam with fillets |
+|---|---|---|
+| <img src="../docs/images/launcher_broken_holes.jpg" width="240"> | <img src="../docs/images/cam_broken_notch.jpg" width="240"> | <img src="../docs/images/cam_filleted.png" width="240"> |
+
+| Waffle-pattern base | Pin reinforced with a dowel, plus a spacer |
+|---|---|
+| <img src="../docs/images/launcher_waffle_base.png" width="300"> | <img src="../docs/images/launcher_pin_dowel.jpg" width="360"> |
 
 ### Known issue
 
@@ -50,23 +78,38 @@ Fixes for a next version:
 
 ## Hopper
 
-- **v1** held two layers of balls. Balls jammed near the opening, and changes to fix that didn't work.
-- **v2**, the final version, holds a single layer and is printed in two parts. Rough print surfaces made balls stick, so the high end of the hopper is raised on spacers to steepen the slope. It also has a mount that holds the launcher.
+- **v1** held two layers of balls. Balls jammed near the opening. A separator was added near the opening, but it didn't stop the jams.
+- **v2**, the final version, holds a single layer and is printed in two parts. Rough print surfaces made balls stick, so the high end of the hopper is raised on swappable spacers to steepen the slope. It also has a mount that holds the launcher.
+
+| v1: double stack | v1: separator near the opening | v2: single stack on spacers |
+|---|---|---|
+| <img src="../docs/images/hopper_v1.png" width="240"> | <img src="../docs/images/hopper_v1_separator.png" width="240"> | <img src="../docs/images/hopper_v2_spacers.png" width="240"> |
+
+| Final hopper and launcher (CAD) | Final hopper and launcher (printed) |
+|---|---|
+| <img src="../docs/images/mech_subsystem_cad.png" width="300"> | <img src="../docs/images/mech_subsystem_photo.jpg" width="300"> |
 
 ## Sensor mount
 
 The final mount slots into a TurtleBot rivet hole (M4 equivalent). Its slot is deep and narrow enough to hold the AMG8833 firmly. The first version was bolted on, which was hard to reach under the waffle plate, and its slot was too loose for the sensor.
 
+| v1: bolted on | v2: slots into a rivet hole |
+|---|---|
+| <img src="../docs/images/sensor_mount_v1.jpg" width="260"> | <img src="../docs/images/sensor_mount_v2.jpg" width="260"> |
+
 ## Assembly
 
 Build a stock TurtleBot3 Burger first, using the [ROBOTIS assembly manual](https://emanual.robotis.com/docs/en/platform/turtlebot3/hardware_setup/). Then:
 
-1. Install the launcher on the hex supports. You may need to remove the top three waffle plates.
-2. Install the L298N motor driver on the second waffle plate. Move the OpenCR board if it's in the way.
-3. Fasten the two hopper sections and the launcher mount together.
-4. Attach the hopper to the spacers, then fix the spacers to the third waffle plate. Spacers 1–4 are different lengths, so check that each one goes in the right place.
-5. Fasten the launcher mount to the launcher.
-6. Insert the AMG8833 into the sensor mount and fit the mount to the robot.
+| Step | Instruction | Diagram |
+|---|---|---|
+| 1 | Install the launcher on the hex supports. You may need to remove the top three waffle plates. | <img src="../docs/images/assembly_1_launcher.png" width="260"> |
+| 2 | Install the L298N motor driver on the second waffle plate. Move the OpenCR board if it's in the way. | <img src="../docs/images/assembly_2_motor_driver.png" width="260"> |
+| 3 | Fasten the two hopper sections and the launcher mount together. | <img src="../docs/images/assembly_3_hopper_mount.png" width="260"> |
+| 4 | Attach the hopper to the spacers, then fix the spacers to the third waffle plate. Spacers 1–4 are different lengths, so check that each one goes in the right place. | <img src="../docs/images/assembly_4_hopper_spacers.png" width="220"> |
+| 5 | Fasten the launcher mount to the launcher. | <img src="../docs/images/assembly_5_mount_launcher.png" width="220"> |
+| 6 | Fit the PCB controller onto the Raspberry Pi, matching the GPIO pins to the labels on the PCB. For more room, add M3×10 mm male-female hex extenders to the M3×45 mm supports on the third waffle plate. | <img src="../docs/images/assembly_6_pcb.png" width="260"> |
+| 7 | Insert the AMG8833 into the sensor mount and fit the mount to the robot. | <img src="../docs/images/assembly_7_sensor_mount.png" width="220"> |
 
 ## Files
 
@@ -77,6 +120,6 @@ Build a stock TurtleBot3 Burger first, using the [ROBOTIS assembly manual](https
 | `SolidWorks_source/Shooter - Friction Wheel/` | **Final hopper** (`Hopper_v2_part1/2`), `Launcher_mount` and `Spacer1`–`Spacer4`. This folder also holds the friction-wheel launcher concept, which was not built. |
 | `SolidWorks_source/Shooter - Friction Wheel/v1 hopper/` | First, double-stack hopper (abandoned). |
 | `SolidWorks_source/IR_sensor_holder.SLDPRT` | AMG8833 sensor mount. |
-| `SolidWorks_source/Shooter/` | Solenoid launcher prototype (abandoned). |
+| `SolidWorks_source/Shooter/` | Solenoid launcher prototype (abandoned; see [`Software/abandoned/`](../Software/abandoned/README.md)). |
 | `Cannon_2.STL`, `Solenoid_holder.STL`, `Spring_rod_2a.STL`, `plate_2.STL`, `Gate.STL` | Print files for the solenoid prototype (abandoned). |
 | `First/Second/Third/Forth Floor.step`, `XM430.step`, `LB-012.step`, `pr30_*`, fasteners | Stock TurtleBot3 Burger parts, used as reference when fitting the payload. |

@@ -7,6 +7,11 @@
 
 An end-to-end autonomous mobile robotics system built on TurtleBot, featuring autonomous SLAM frontier exploration, real-time infrared thermal target acquisition, and a custom 3D-printed cam-cantilever-spring ping-pong ball launcher.
 
+<p align="center">
+  <img src="docs/images/robot_photo.jpg" width="380" alt="Assembled TurtleBot with hopper, launcher and thermal sensor">
+  <img src="docs/images/robot_cad.png" width="380" alt="CAD model of the robot and payload">
+</p>
+
 ---
 
 ## System Architecture
